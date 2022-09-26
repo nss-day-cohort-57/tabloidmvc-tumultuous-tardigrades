@@ -5,6 +5,7 @@ using Microsoft.VisualBasic;
 using System.Security.Claims;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
+using TabloidMVC.Models;
 
 namespace TabloidMVC.Controllers
 {
@@ -65,6 +66,30 @@ namespace TabloidMVC.Controllers
             {
                 vm.CategoryOptions = _categoryRepository.GetAll();
                 return View(vm);
+            }
+        }
+
+        public IActionResult Delete(int id)
+        {
+            int userProfileId = GetCurrentUserProfileId();
+            var post = _postRepository.GetUserPostById(id, userProfileId);
+
+            return View(post);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id, Post post)
+        {
+            try
+            {
+                _postRepository.Delete(id);
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return RedirectToAction("Details");
             }
         }
 
