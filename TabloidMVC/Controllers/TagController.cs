@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TabloidMVC.Repositories;
 using TabloidMVC.Models;
 
+
 namespace TabloidMVC.Controllers
 {
     public class TagController : Controller
@@ -45,7 +46,9 @@ namespace TabloidMVC.Controllers
         // GET: TagController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Tag tags = _tagRepo.GetTagById(id);
+            return View(tags);
+
         }
 
         // POST: TagController/Edit/5

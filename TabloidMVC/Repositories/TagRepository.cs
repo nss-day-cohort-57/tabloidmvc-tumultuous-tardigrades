@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
+using Microsoft.Data.SqlClient;
+using System;
 
 namespace TabloidMVC.Repositories
 {
     public class TagRepository : BaseRepository, ITagRepository
     {
         public TagRepository(IConfiguration config) : base(config) { }
+
         public List<Tag> GetAll()
         {
             using (var conn = Connection)
@@ -31,6 +35,38 @@ namespace TabloidMVC.Repositories
                     reader.Close();
 
                     return tags;
+                }
+            }
+        }
+
+        public Tag GetTagById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    SELECT Id, Name 
+                    FROM Tag
+                    WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    var reader = cmd.ExecuteReader();
+
+                    tags.Add(new Tag()
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        Name = reader.GetString(reader.GetOrdinal("Name")),
+                    });
+
+                    //if (reader.Read())
+                    //{
+                    //    tag = NewPostFromReader(reader);
+                    //}
+
+                    reader.Close();
+
+                    return tag;
                 }
             }
         }
