@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using TabloidMVC.Repositories;
 using TabloidMVC.Models;
-
+using System.Collections.Generic;
+using System;
 
 namespace TabloidMVC.Controllers
 {
@@ -51,21 +52,27 @@ namespace TabloidMVC.Controllers
         // GET: CategoryController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Category categories = _categoryRepository.GetCategoryById(id);
+            if (categories == null)
+            {
+                return NotFound();
+            }
+            return View(categories);
         }
 
         // POST: CategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Category category)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _categoryRepository.UpdateCategory(category);
+                return RedirectToAction("Index");
             }
-            catch
+            catch(Exception)
             {
-                return View();
+                return View(category);
             }
         }
 
