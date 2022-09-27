@@ -12,10 +12,12 @@ namespace TabloidMVC.Controllers
     public class AccountController : Controller
     {
         private readonly IUserProfileRepository _userProfileRepository;
+        
 
         public AccountController(IUserProfileRepository userProfileRepository)
         {
             _userProfileRepository = userProfileRepository;
+            
         }
 
         public IActionResult Login()
