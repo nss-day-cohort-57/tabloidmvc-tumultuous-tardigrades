@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
 using TabloidMVC.Utils;
+using TabloidMVC.Models.ViewModels;
 
 namespace TabloidMVC.Repositories
 {
@@ -178,6 +179,41 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+
+        public void UpdatePost(PostCreateViewModel vm)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                                      Update Post 
+                                      SET 
+                                      Title = @title,
+                                      Content = @content,
+                                      Category = @category,
+                                      ImageLocation = @imageLocation,
+                                      PublishDateTime = @publishDateTime
+                                      WHERE Id = @id
+                                      ";
+
+                    cmd.Parameters.AddWithValue("@id", vm.Post.Id);
+                    cmd.Parameters.AddWithValue("@title", vm.Post.Title);
+                    cmd.Parameters.AddWithValue("@content", vm.Post.Content);
+                    cmd.Parameters.AddWithValue("@category", vm.Post.Category.Name);
+                    cmd.Parameters.AddWithValue("@imageLocation", vm.Post.ImageLocation == null ? DBNull.Value : vm.Post.ImageLocation);
+                    cmd.Parameters.AddWithValue("@publishDateTime", vm.Post.PublishDateTime == null ? DBNull.Value : vm.Post.PublishDateTime);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+
 
         private Post NewPostFromReader(SqlDataReader reader)
         {
