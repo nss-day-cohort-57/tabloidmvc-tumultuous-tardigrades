@@ -51,22 +51,22 @@ namespace TabloidMVC.Repositories
                     FROM Tag
                     WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
-                    var reader = cmd.ExecuteReader();
+                    //var reader = cmd.ExecuteReader();
 
-                    tags.Add(new Tag()
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                        Name = reader.GetString(reader.GetOrdinal("Name")),
-                    });
 
-                    //if (reader.Read())
-                    //{
-                    //    tag = NewPostFromReader(reader);
-                    //}
-
-                    reader.Close();
-
-                    return tag;
+                        while (reader.Read())
+                        {
+                            Tag tag = new Tag
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                            };
+                            return tag;
+                        }
+                        return null;
+                    }
                 }
             }
         }
