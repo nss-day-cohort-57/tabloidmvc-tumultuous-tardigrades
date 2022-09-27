@@ -181,7 +181,7 @@ namespace TabloidMVC.Repositories
         }
 
 
-        public void UpdatePost(PostCreateViewModel vm)
+        public void UpdatePost(Post post)
         {
             using (SqlConnection conn = Connection)
             {
@@ -194,18 +194,18 @@ namespace TabloidMVC.Repositories
                                       SET 
                                       Title = @title,
                                       Content = @content,
-                                      Category = @category,
+                                      CategoryId = @categoryId,
                                       ImageLocation = @imageLocation,
                                       PublishDateTime = @publishDateTime
                                       WHERE Id = @id
                                       ";
 
-                    cmd.Parameters.AddWithValue("@id", vm.Post.Id);
-                    cmd.Parameters.AddWithValue("@title", vm.Post.Title);
-                    cmd.Parameters.AddWithValue("@content", vm.Post.Content);
-                    cmd.Parameters.AddWithValue("@category", vm.Post.Category.Name);
-                    cmd.Parameters.AddWithValue("@imageLocation", vm.Post.ImageLocation == null ? DBNull.Value : vm.Post.ImageLocation);
-                    cmd.Parameters.AddWithValue("@publishDateTime", vm.Post.PublishDateTime == null ? DBNull.Value : vm.Post.PublishDateTime);
+                    cmd.Parameters.AddWithValue("@id", post.Id);
+                    cmd.Parameters.AddWithValue("@title", post.Title);
+                    cmd.Parameters.AddWithValue("@content", post.Content);
+                    cmd.Parameters.AddWithValue("@categoryId", post.CategoryId);
+                    cmd.Parameters.AddWithValue("@imageLocation", post.ImageLocation == null ? DBNull.Value : post.ImageLocation);
+                    cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime == null ? DBNull.Value : post.PublishDateTime);
 
                     cmd.ExecuteNonQuery();
                 }

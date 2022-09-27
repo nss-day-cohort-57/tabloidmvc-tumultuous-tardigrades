@@ -102,8 +102,10 @@ namespace TabloidMVC.Controllers
 
         public ActionResult Edit(int id)
         {
-            Post posts = _postRepository.GetPublishedPostById(id);
-            return View(posts);
+            var vm = new PostCreateViewModel();
+            vm.CategoryOptions = _categoryRepository.GetAll();
+            vm.Post = _postRepository.GetPublishedPostById(id);
+            return View(vm);
 
         }
 
@@ -114,7 +116,7 @@ namespace TabloidMVC.Controllers
         {
             try
             {
-                _postRepository.UpdatePost(vm);
+                _postRepository.UpdatePost(vm.Post);
 
                 return RedirectToAction("Index");
             }
