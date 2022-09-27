@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +40,8 @@ namespace TabloidMVC.Repositories
             }
         }
 
+
+
         public void AddTag(Tag tag)
         {
             using (SqlConnection conn = Connection)
@@ -61,6 +64,25 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        public void DeleteTag(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Tag
+                            WHERE Id = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         public Tag GetTagById(int id)
         {
@@ -74,7 +96,6 @@ namespace TabloidMVC.Repositories
                     FROM Tag
                     WHERE Id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
-                    //var reader = cmd.ExecuteReader();
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -90,8 +111,6 @@ namespace TabloidMVC.Repositories
                         }
                         return null;
                     }
-
-
                 }
             }
         }
@@ -116,3 +135,5 @@ namespace TabloidMVC.Repositories
         }
     }
 }
+
+
