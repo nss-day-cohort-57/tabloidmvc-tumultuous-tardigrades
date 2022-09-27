@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
+<<<<<<< HEAD
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+=======
+using Microsoft.Data.SqlClient;
+>>>>>>> main
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
 using Microsoft.Data.SqlClient;
@@ -39,7 +43,20 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        public void AddTag(Tag tag)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Tag (Name)
+                        OUTPUT INSERTED.ID
+                        VALUES (@name);
+                        ";
 
+<<<<<<< HEAD
         public Tag GetTagById(int id)
         {
             using (var conn = Connection)
@@ -68,6 +85,13 @@ namespace TabloidMVC.Repositories
                         }
                         return null;
                     }
+=======
+                    cmd.Parameters.AddWithValue("@name", tag.Name);
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    tag.Id = id;
+>>>>>>> main
                 }
             }
         }
