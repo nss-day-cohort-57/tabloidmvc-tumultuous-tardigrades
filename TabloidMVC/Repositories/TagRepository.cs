@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
 
@@ -31,6 +32,28 @@ namespace TabloidMVC.Repositories
                     reader.Close();
 
                     return tags;
+                }
+            }
+        }
+
+        public void AddTag(Tag tag)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Tag (Name)
+                        OUTPUT INSERTED.ID
+                        VALUES (@name);
+                        ";
+
+                    cmd.Parameters.AddWithValue("@name", tag.Name);
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    tag.Id = id;
                 }
             }
         }
