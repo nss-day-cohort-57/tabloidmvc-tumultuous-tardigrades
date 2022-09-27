@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
-<<<<<<< HEAD
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-=======
 using Microsoft.Data.SqlClient;
->>>>>>> main
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
-using Microsoft.Data.SqlClient;
 using System;
 
 namespace TabloidMVC.Repositories
@@ -56,7 +52,16 @@ namespace TabloidMVC.Repositories
                         VALUES (@name);
                         ";
 
-<<<<<<< HEAD
+                    cmd.Parameters.AddWithValue("@name", tag.Name);
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    tag.Id = id;
+                }
+            }
+        }
+
+
         public Tag GetTagById(int id)
         {
             using (var conn = Connection)
@@ -85,13 +90,8 @@ namespace TabloidMVC.Repositories
                         }
                         return null;
                     }
-=======
-                    cmd.Parameters.AddWithValue("@name", tag.Name);
 
-                    int id = (int)cmd.ExecuteScalar();
 
-                    tag.Id = id;
->>>>>>> main
                 }
             }
         }
@@ -104,10 +104,11 @@ namespace TabloidMVC.Repositories
 
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT Id, Name FROM Tag";
+                    cmd.CommandText = @"Update Tag SET [Name] = @name
+                                        WHERE Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", tag.Id);
-                    cmd.Parameters.AddWithValue("@email", tag.Name);
+                    cmd.Parameters.AddWithValue("@name", tag.Name);
 
                     cmd.ExecuteNonQuery();
                 }
