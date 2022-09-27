@@ -7,6 +7,10 @@ namespace TabloidMVC.Repositories
     public interface ITagRepository
     {
         List<Tag> GetAll();
+<<<<<<< HEAD
         Tag GetTagById(int id);
+=======
+
+>>>>>>> main
     }
 }
