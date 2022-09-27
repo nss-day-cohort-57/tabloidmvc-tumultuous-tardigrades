@@ -7,6 +7,7 @@ using System;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Authorization;
 
+
 namespace TabloidMVC.Controllers
 {
     public class TagController : Controller
@@ -49,21 +50,25 @@ namespace TabloidMVC.Controllers
         // GET: TagController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Tag tags = _tagRepo.GetTagById(id);
+            return View(tags);
+
         }
 
         // POST: TagController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Tag tag)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _tagRepo.UpdateTag(tag);
+
+                return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return View(tag);
             }
         }
 
