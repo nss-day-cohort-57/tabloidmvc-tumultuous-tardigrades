@@ -39,7 +39,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
-<<<<<<< HEAD
+
         public Tag GetTagById(int id)
         {
             using (var conn = Connection)
@@ -71,11 +71,23 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
-=======
 
+        public void UpdateTag(Tag tag)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
 
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT Id, Name FROM Tag";
 
->>>>>>> main
+                    cmd.Parameters.AddWithValue("@id", tag.Id);
+                    cmd.Parameters.AddWithValue("@email", tag.Name);
 
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
