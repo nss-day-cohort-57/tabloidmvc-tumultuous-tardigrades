@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-=======
-﻿using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
->>>>>>> main
 using TabloidMVC.Models;
 using TabloidMVC.Utils;
 
@@ -29,7 +25,7 @@ namespace TabloidMVC.Repositories
                     using (var reader = cmd.ExecuteReader())
                     {
                         List<UserProfile> userProfile = new List<UserProfile>();
-                        while(reader.Read())
+                        while (reader.Read())
                         {
                             UserProfile profile = new UserProfile
                             {
@@ -108,9 +104,11 @@ namespace TabloidMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT Id,ImageLocation, [FirstName], LastName, DisplayName, Email, CreateDateTime
-                        FROM UserProfile
-                        WHERE Id = @id";
+                        SELECT  up.Id, up.ImageLocation, up.[FirstName], up.LastName, up.DisplayName, up.Email, up.CreateDateTime, u.Name As Type
+                        FROM UserProfile up
+                        JOIN UserType u ON u.Id = up.UserTypeId
+                        WHERE up.Id = @id";
+
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -121,35 +119,32 @@ namespace TabloidMVC.Repositories
                             UserProfile profile = new UserProfile()
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                ImageLocation = reader.GetString(reader.GetOrdinal("ImaegeLocation")),     
+                                //ImageLocation = reader.GetString(reader.GetOrdinal("ImaegeLocation")),
                                 FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
                                 LastName = reader.GetString(reader.GetOrdinal("LastName")),
                                 DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
                                 Email = reader.GetString(reader.GetOrdinal("Email")),
                                 CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
 
-                            };
-                            UserType userType = new UserType()
-                            {
-                                Name = reader.GetString(reader.GetOrdinal("UserType")),
-                            };
+                                UserType = new UserType()
+                                {
+                                    Name = reader.GetString(reader.GetOrdinal("Type")),
+                                }
 
+
+                            };
                             if (!reader.IsDBNull(reader.GetOrdinal("ImageLocation")))
                             {
                                 profile.ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation"));
                             }
-                            //if (!reader.IsDBNull(reader.GetOrdinal("ImageUrl")))
-                            //{
-                            //    dog.ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl"));
-                            //}
-
-                            return profile;
+                        return profile;
                         }
-
-                        return null;
+                    return null;
                     }
+
                 }
             }
         }
     }
+}
 }
