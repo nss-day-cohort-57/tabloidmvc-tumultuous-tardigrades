@@ -9,6 +9,23 @@ namespace TabloidMVC.Repositories
     {
         public CommentRepository(IConfiguration config) : base(config) { }
 
+        public void DeleteComment(int commentId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Comment
+                                        WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", commentId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public List<Comment> GetCommentsByPostId(int postId)
         {
             using (SqlConnection conn = Connection)
@@ -49,6 +66,51 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+
+
+
+        public Comment GetCommentById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                                SELECT Id, PostId, Subject, Content, CreateDateTime
+                                FROM Comment
+                                WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Comment comment = new Comment
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                PostId = reader.GetInt32(reader.GetOrdinal("PostId")),
+                                Subject = reader.GetString(reader.GetOrdinal("Subject")),
+                                Content = reader.GetString(reader.GetOrdinal("Content")),
+                                CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+
+                            };
+                            return comment;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
+
+
 
         public void AddComment(Comment comment)
         {
