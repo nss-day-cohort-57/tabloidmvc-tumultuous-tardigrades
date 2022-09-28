@@ -66,7 +66,7 @@ namespace TabloidMVC.Controllers
 
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return View(tag);
             }
@@ -96,7 +96,7 @@ namespace TabloidMVC.Controllers
 
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return View(tag);
             }
