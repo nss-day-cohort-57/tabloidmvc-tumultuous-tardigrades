@@ -9,7 +9,7 @@ namespace TabloidMVC.Controllers
 {
     public class CategoryController : Controller
     {
-       
+
         private readonly ICategoryRepository _categoryRepository;
         public CategoryController(ICategoryRepository categoryRepository)
         {
@@ -44,7 +44,7 @@ namespace TabloidMVC.Controllers
                 _categoryRepository.AddCategory(category);
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return View(category);
             }
@@ -71,7 +71,7 @@ namespace TabloidMVC.Controllers
                 _categoryRepository.UpdateCategory(category);
                 return RedirectToAction("Index");
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return View(category);
             }
@@ -94,7 +94,7 @@ namespace TabloidMVC.Controllers
                 _categoryRepository.DeleteCategory(id);
                 return RedirectToAction("Index");
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return View(category);
             }

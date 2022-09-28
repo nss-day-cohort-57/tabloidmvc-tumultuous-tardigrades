@@ -9,6 +9,23 @@ namespace TabloidMVC.Repositories
     {
         public CommentRepository(IConfiguration config) : base(config) { }
 
+        public void DeleteComment(int commentId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Comment
+                                        WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", commentId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public List<Comment> GetCommentsByPostId(int postId)
         {
             using (SqlConnection conn = Connection)
@@ -51,28 +68,8 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        public void AddComment(Comment comment)
-        {
-            using (SqlConnection conn = Connection)
-            {
-                conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @"INSERT INTO Comment
-                                        (PostId, UserProfileId, Subject, Content, CreateDateTime)
-                                        VALUES
-                                        (@postId, @userProfileId, @subject, @content, @createDateTime)";
 
-                    cmd.Parameters.AddWithValue("@postId", comment.PostId);
-                    cmd.Parameters.AddWithValue("@userProfileId", comment.UserProfile.Id);
-                    cmd.Parameters.AddWithValue("@subject", comment.Subject);
-                    cmd.Parameters.AddWithValue("@content", comment.Content);
-                    cmd.Parameters.AddWithValue("@createDateTime", comment.CreateDateTime);
 
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
 
         public Comment GetCommentById(int id)
         {
@@ -112,6 +109,33 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+
+
+
+        public void AddComment(Comment comment)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Comment
+                                        (PostId, UserProfileId, Subject, Content, CreateDateTime)
+                                        VALUES
+                                        (@postId, @userProfileId, @subject, @content, @createDateTime)";
+
+                    cmd.Parameters.AddWithValue("@postId", comment.PostId);
+                    cmd.Parameters.AddWithValue("@userProfileId", comment.UserProfile.Id);
+                    cmd.Parameters.AddWithValue("@subject", comment.Subject);
+                    cmd.Parameters.AddWithValue("@content", comment.Content);
+                    cmd.Parameters.AddWithValue("@createDateTime", comment.CreateDateTime);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
 
         public void UpdateComment(Comment comment)
         {
