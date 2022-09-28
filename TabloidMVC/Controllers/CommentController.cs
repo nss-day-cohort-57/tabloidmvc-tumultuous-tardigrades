@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using TabloidMVC.Models;
+using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
@@ -10,15 +14,26 @@ namespace TabloidMVC.Controllers
     public class CommentController : Controller
     {
         private readonly ICommentRepository _commentRepo;
+        private readonly IPostRepository _postRepo;
 
-        public CommentController(ICommentRepository commentRepository)
+        public CommentController(ICommentRepository commentRepository, IPostRepository postRepository)
         {
             _commentRepo = commentRepository;
+            _postRepo = postRepository;
         }
         // GET: CommentController
-        public ActionResult Index()
+        public ActionResult Index(int id)
         {
-            return View();
+            Post post = _postRepo.GetPublishedPostById(id);
+
+            ViewCommentsViewModel vm = new ViewCommentsViewModel()
+            {
+                PostId = post.Id,
+                PostTitle = post.Title,
+                Comments = _commentRepo.GetCommentsByPostId(id)
+            };
+
+            return View(vm);
         }
 
         // GET: CommentController/Details/5
@@ -43,7 +58,7 @@ namespace TabloidMVC.Controllers
             try
             {
                 comment.CreateDateTime = DateTime.Now;
-                comment.UserProfileId = GetCurrentUserProfileId();
+                comment.UserProfile = new UserProfile() { Id = GetCurrentUserProfileId() };
                 comment.PostId = id;
 
                 _commentRepo.AddComment(comment);
@@ -59,21 +74,29 @@ namespace TabloidMVC.Controllers
         // GET: CommentController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            
+           Comment comment = _commentRepo.GetCommentById(id);
+            if (comment == null)
+            {
+                NotFound();
+            }
+         
+            return View(comment);
         }
 
         // POST: CommentController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Comment comment)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _commentRepo.UpdateComment(comment);
+                return RedirectToAction("Index", new { id = comment.PostId });
             }
-            catch
+            catch(Exception)
             {
-                return View();
+                return View(comment);
             }
         }
 
