@@ -9,6 +9,21 @@
 <div>
     <h4>UserProfile</h4>
     <hr />
+    <dl>
+        @if (Model.ImageLocation == null){
+        <dt class = "col-sm-10">           
+             <img style="width:100px;float:left;margin-right:20px"
+                 src="https://avatars.dicebear.com/v2/female/c117aa483c649ecbc46c6d65172bf6e6.svg" />           
+        </dt>
+        } else 
+        {
+             <dt class = "col-sm-10">           
+             <img style="width:100px;float:left;margin-right:20px"
+                 src="@Model.ImageLocation" />           
+        </dt>
+        }
+
+    </dl>
     <dl class="row">
         @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Id)
@@ -45,12 +60,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CreateDateTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageLocation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageLocation)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.UserType)
