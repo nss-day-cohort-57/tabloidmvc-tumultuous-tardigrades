@@ -6,6 +6,7 @@ using System.Security.Claims;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 using TabloidMVC.Models;
+using System;
 
 namespace TabloidMVC.Controllers
 {
@@ -106,5 +107,32 @@ namespace TabloidMVC.Controllers
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
         }
+
+        public ActionResult Edit(int id)
+        {
+            var vm = new PostCreateViewModel();
+            vm.CategoryOptions = _categoryRepository.GetAll();
+            vm.Post = _postRepository.GetPublishedPostById(id);
+            return View(vm);
+
+        }
+
+        // POST: TagController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, PostCreateViewModel vm)
+        {
+            try
+            {
+                _postRepository.UpdatePost(vm.Post);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View(vm);
+            }
+        }
+
     }
 }

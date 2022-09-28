@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
 using TabloidMVC.Utils;
+using TabloidMVC.Models.ViewModels;
 
 namespace TabloidMVC.Repositories
 {
@@ -123,6 +124,9 @@ namespace TabloidMVC.Repositories
                     if (reader.Read())
                     {
                         post = NewPostFromReader(reader);
+                        post.IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved"));
+                        post.PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime"));
+                        post.CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId"));
                     }
 
                     reader.Close();
@@ -219,6 +223,47 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+
+        public void UpdatePost(Post post)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                                      Update Post 
+                                      SET 
+                                      Title = @title,
+                                      Content = @content,
+                                      CategoryId = @categoryId,
+                                      ImageLocation = @imageLocation,
+                                      PublishDateTime = @publishDateTime,
+                                      CreateDateTime = @createDateTime,
+                                      IsApproved = @isApproved,
+                                      UserProfileId = @userProfileId
+                                      WHERE Id = @id
+                                      ";
+
+                    cmd.Parameters.AddWithValue("@id", post.Id);
+                    cmd.Parameters.AddWithValue("@title", post.Title);
+                    cmd.Parameters.AddWithValue("@content", post.Content);
+                    cmd.Parameters.AddWithValue("@categoryId", post.CategoryId);
+                    cmd.Parameters.AddWithValue("@imageLocation", post.ImageLocation == null ? DBNull.Value : post.ImageLocation);
+                    cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime == null ? DBNull.Value : post.PublishDateTime);
+                    cmd.Parameters.AddWithValue("@createDateTime", post.CreateDateTime);
+                    cmd.Parameters.AddWithValue("@isApproved", post.IsApproved);
+                    cmd.Parameters.AddWithValue("@userProfileId", post.UserProfileId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+
 
         private Post NewPostFromReader(SqlDataReader reader)
         {
