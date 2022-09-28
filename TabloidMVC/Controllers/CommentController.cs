@@ -114,8 +114,9 @@ namespace TabloidMVC.Controllers
         {
             try
             {
+                int postId = _commentRepo.GetCommentById(id).PostId;
                 _commentRepo.DeleteComment(id);
-                return RedirectToAction("Index", new { id = comment.PostId });
+                return RedirectToAction("Index", new { id = postId });
             }
             catch(Exception)
             {
