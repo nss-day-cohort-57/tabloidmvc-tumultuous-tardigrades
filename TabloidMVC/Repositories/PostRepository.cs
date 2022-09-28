@@ -83,6 +83,9 @@ namespace TabloidMVC.Repositories
                     if (reader.Read())
                     {
                         post = NewPostFromReader(reader);
+                        post.IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved"));
+                        post.PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime"));
+                        post.CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId"));
                     }
 
                     reader.Close();
