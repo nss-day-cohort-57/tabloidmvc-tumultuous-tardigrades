@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -72,21 +74,29 @@ namespace TabloidMVC.Controllers
         // GET: CommentController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            
+           Comment comment = _commentRepo.GetCommentById(id);
+            if (comment == null)
+            {
+                NotFound();
+            }
+         
+            return View(comment);
         }
 
         // POST: CommentController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Comment comment)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _commentRepo.UpdateComment(comment);
+                return RedirectToAction("Index", new { id = comment.PostId });
             }
-            catch
+            catch(Exception)
             {
-                return View();
+                return View(comment);
             }
         }
 
