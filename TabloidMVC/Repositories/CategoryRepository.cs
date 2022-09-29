@@ -37,6 +37,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
+<<<<<<< Updated upstream
         public void AddCategory(Category category)
         {
             using (SqlConnection conn = Connection)
@@ -127,5 +128,8 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+=======
+
+>>>>>>> Stashed changes
     }
 }
