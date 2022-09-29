@@ -97,6 +97,28 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        public ActionResult Deactivate(int id)
+        {
+            UserProfile userProfile = _userProfileRepo.GetUserProfileById(id);
+
+            return View(userProfile);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Deactivate(int id, IFormCollection collection)
+        {
+            try
+            {
+                _userProfileRepo.DeactivateUser(id);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
         private readonly IUserProfileRepository _userProfileRepo;
         public UserProfileController(
             IUserProfileRepository userProfileRepo)
