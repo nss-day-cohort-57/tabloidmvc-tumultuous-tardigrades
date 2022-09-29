@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TabloidMVC.Models;
 using TabloidMVC.Repositories;
 using System;
+using System.Security.Claims;
 
 namespace TabloidMVC.Controllers
 {
@@ -28,22 +29,25 @@ namespace TabloidMVC.Controllers
         }
 
         // GET: SubscriptionController/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
-            return View();
+            Subscription subscription = new Subscription() { ProviderUserProfileId = id };
+            return View(subscription);
         }
 
         // POST: SubscriptionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Subscription subscription)
+        public ActionResult Create(int id, Subscription subscription)
         {
             try
             {
                 subscription.BeginDateTime = DateTime.Now;
+                subscription.SubscriberUserProfileId = GetCurrentUserProfileId();
+                subscription.ProviderUserProfileId = id;
 
                 _subscriptionRepo.AddSubscription(subscription);
-                return RedirectToAction("Details", "Post");
+                return RedirectToAction("Details", "Post", new {id = subscription.ProviderUserProfileId});
             }
             catch(Exception)
             {
@@ -91,6 +95,12 @@ namespace TabloidMVC.Controllers
             {
                 return View();
             }
+        }
+
+        private int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }

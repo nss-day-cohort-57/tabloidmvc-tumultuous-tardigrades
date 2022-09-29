@@ -16,15 +16,15 @@ namespace TabloidMVC.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Subscription s
-                                        (SubscriberUserProfileId, ProviderUserProfileId, BeginDateTime, EndDateTime)
+                    cmd.CommandText = @"INSERT INTO Subscription 
+                                        (SubscriberUserProfileId, ProviderUserProfileId, BeginDateTime)
                                         VALUES
-                                        (@subscriberUserProfileId, @providerUserProfileId, @beginDateTime, @endDateTime)";
+                                        (@subscriberUserProfileId, @providerUserProfileId, @beginDateTime)";
 
                     cmd.Parameters.AddWithValue("@subscriberUserProfileId", subscription.SubscriberUserProfileId);
                     cmd.Parameters.AddWithValue("@providerUserProfileId", subscription.ProviderUserProfileId);
                     cmd.Parameters.AddWithValue("@beginDateTime", subscription.BeginDateTime);
-                    cmd.Parameters.AddWithValue("@endDateTime", subscription.EndDateTime);
+                    
 
                     cmd.ExecuteNonQuery();
                 }
