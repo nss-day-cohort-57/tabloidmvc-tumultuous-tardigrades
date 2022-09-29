@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using TabloidMVC.Repositories;
 using TabloidMVC.Models;
+using System;
 
 namespace TabloidMVC.Controllers
 {
@@ -37,11 +38,16 @@ namespace TabloidMVC.Controllers
         // POST: UserProfileController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(UserProfile userProfile)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                userProfile.CreateDateTime = DateTime.Now;
+                userProfile.UserTypeId = 2;
+
+                _userProfileRepo.AddUserProfile(userProfile);
+
+                return RedirectToAction("Login", "Account");
             }
             catch
             {
