@@ -47,7 +47,7 @@ namespace TabloidMVC.Controllers
 
                 _userProfileRepo.AddUserProfile(userProfile);
 
-                return RedirectToAction("Account", "Login");
+                return RedirectToAction("Login", "Account");
             }
             catch
             {

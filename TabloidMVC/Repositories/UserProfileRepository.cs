@@ -162,7 +162,7 @@ namespace TabloidMVC.Repositories
                                              UserTypeId)
                                         VALUES
                                             (@displayName, @firstName, @lastName,
-                                             @email, @createDateTime, @imageLocation
+                                             @email, @createDateTime, @imageLocation,
                                              @userTypeId)";
 
                     cmd.Parameters.AddWithValue("@displayName", userProfile.DisplayName);
