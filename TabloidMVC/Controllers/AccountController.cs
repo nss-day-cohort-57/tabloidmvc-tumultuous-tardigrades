@@ -30,7 +30,7 @@ namespace TabloidMVC.Controllers
         {
             var userProfile = _userProfileRepository.GetByEmail(credentials.Email);
 
-            if (userProfile == null)
+            if (userProfile == null || userProfile.IsDeactivated)
             {
                 ModelState.AddModelError("Email", "Invalid email");
                 return View();
@@ -40,6 +40,7 @@ namespace TabloidMVC.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, userProfile.Id.ToString()),
                 new Claim(ClaimTypes.Email, userProfile.Email),
+                new Claim(ClaimTypes.Role, userProfile.UserType.Name)
             };
 
             var claimsIdentity = new ClaimsIdentity(
