@@ -1,4 +1,6 @@
-﻿namespace TabloidMVC.Models
+﻿using System.Collections.Generic;
+
+namespace TabloidMVC.Models
 {
     public class Reaction
     {

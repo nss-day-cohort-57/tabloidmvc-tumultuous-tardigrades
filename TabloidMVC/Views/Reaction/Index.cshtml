@@ -4,12 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container pt-5">    
+    <h1>Index of Reactions</h1>
+
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create New Reaction</a>
 </p>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -21,10 +23,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.ImageLocation)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
+
 @foreach (var item in Model) {
         <tr>
             <td>
@@ -34,8 +36,25 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImageLocation)
+                   <dl>
+                        @if (item.ImageLocation == null)
+                    {
+                        <dt class="col-sm-5">
+                            <img style="width:100px;float:left;margin-right:20px"
+                                 src="https://avatars.dicebear.com/v2/female/c117aa483c649ecbc46c6d65172bf6e6.svg" />
+                        </dt>
+                    }
+                    else
+                    {
+                        <dt class="col-sm-5">
+                            <img style="width:100px;float:left;margin-right:20px"
+                                 src="@item.ImageLocation" />
+                        </dt>
+                    }
+
+                    </dl>
             </td>
+
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Details", "Details", new { id=item.Id }) |
@@ -45,3 +64,4 @@
 }
     </tbody>
 </table>
+</div>
